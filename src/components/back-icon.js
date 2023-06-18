@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 const BackIcon = () => {
      const navigation = useNavigation();
      const handleBackPress =() =>{
+      
         navigation.goBack();
       }
     return (

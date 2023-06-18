@@ -8,6 +8,8 @@ export const AppProvider = ({ children }) => {
 
   const [stationsInfo, setStationsInfo] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const [clickedItem, setClickedItem] = useState(null);
   const [stationInfo, setStationInfo] = useState({});
   const fetchStationList = () => {
@@ -29,6 +31,7 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   const handleItemClick = (item) => {
+    setIsOpen(false)
     setClickedItem(item);
     // Perform any desired actions with the clicked item
     setIsLoading(true);
@@ -50,7 +53,9 @@ export const AppProvider = ({ children }) => {
     stationsInfo,
     isLoading,
     handleItemClick,
-    stationInfo
+    stationInfo,
+    isOpen,
+    setIsOpen,
   }
   return (
     <AppContext.Provider value={value}>
