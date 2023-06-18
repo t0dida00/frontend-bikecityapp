@@ -9,6 +9,7 @@ export const AppProvider = ({ children }) => {
   const [stationsInfo, setStationsInfo] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
 
   const [clickedItem, setClickedItem] = useState(null);
   const [stationInfo, setStationInfo] = useState({});
@@ -49,6 +50,23 @@ export const AppProvider = ({ children }) => {
       });
   };
 
+  const handleSearch = async (station) => {
+    const formData = new FormData();
+    formData.append('Name', station);
+    setIsSearch(false)
+    try {
+      const response = await axios.post(`${BASE_URL}/stations/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    
+      setStationsInfo(response.data)
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const value = {
     stationsInfo,
     isLoading,
@@ -56,6 +74,9 @@ export const AppProvider = ({ children }) => {
     stationInfo,
     isOpen,
     setIsOpen,
+    isSearch,
+    setIsSearch,
+    handleSearch
   }
   return (
     <AppContext.Provider value={value}>
