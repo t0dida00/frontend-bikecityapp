@@ -7,20 +7,37 @@ export const AppContext = createContext();
 export const AppProvider = ({ children }) => {
 
   const [stationsInfo, setStationsInfo] = useState([]);
+  const [stationList, setStationList] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
-
+  const [dataLength,setDataLength]=useState(0)
+  const [query,setQuery]= useState('')
+  const [page,setPage]=useState(1)
   const [clickedItem, setClickedItem] = useState(null);
   const [stationInfo, setStationInfo] = useState({});
   const fetchStationList = () => {
     setIsLoading(true);
+    setQuery('')
     axios
-      .get(`${BASE_URL}/stations`)
+      .get(`${BASE_URL}/stations?page=${page}`)
       .then(res => {
         let stationInfo = res.data;
-        setStationsInfo(stationInfo);
-        setIsLoading(false);
+        
+        if(stationsInfo.length>0 && isSearch == false && query == ''  )
+        {
+          const combineData= [...stationsInfo,...stationInfo.data]
+        
+           setStationsInfo(combineData);
+           setDataLength(stationInfo.length)
+           setIsLoading(false);
+        }
+        else{
+          setStationsInfo(stationInfo.data);
+          setDataLength(stationInfo.length)
+          setIsLoading(false);
+        }
+     
       })
       .catch(e => {
         console.log(`login error ${e}`);
@@ -29,7 +46,8 @@ export const AppProvider = ({ children }) => {
   }
   useEffect(() => {
     fetchStationList();
-  }, []);
+    // const combineData =[...stationsInfo.data, ...stationList.data]
+  }, [page]);
 
   const handleItemClick = (item) => {
     setIsOpen(false)
@@ -53,17 +71,22 @@ export const AppProvider = ({ children }) => {
   const handleSearch = async (station) => {
     const formData = new FormData();
     formData.append('Name', station);
-    setIsSearch(false)
+    setIsLoading(true);
+    setIsSearch(false) 
     try {
       const response = await axios.post(`${BASE_URL}/stations/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+      setQuery(station)
+      setStationsInfo(response.data.data)
     
-      setStationsInfo(response.data)
+      setIsLoading(false);
     } catch (error) {
-      console.error(error);
+    
+      setIsLoading(false);
+      console.error(`Searching:${station} - ${error.response.data} `);
     }
   };
 
@@ -76,7 +99,12 @@ export const AppProvider = ({ children }) => {
     setIsOpen,
     isSearch,
     setIsSearch,
-    handleSearch
+    handleSearch,
+    query,
+    fetchStationList,
+    setPage,
+    page,
+    dataLength
   }
   return (
     <AppContext.Provider value={value}>

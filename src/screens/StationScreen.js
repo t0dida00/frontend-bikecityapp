@@ -11,19 +11,17 @@ import TableComponent from '../components/modal';
 const StationScreen = () => {
  
   const { stationInfo, isLoading,stationsInfo,handleItemClick,isOpen,setIsOpen } = useContext(AppContext);
-    const station_list = stationsInfo.data
+    const station_list = stationsInfo
   // var index = station_list.findIndex(item => item["Name"] === stationInfo.data[0]["Name"])
    const station_list_length =station_list.length
   const pan = React.useRef(new Animated.ValueXY()).current;
   var index = 0
 
-  if(stationInfo.data)
+  if(Object.keys(stationInfo).length !== 0)
   {
      index = station_list.findIndex(item => item["Name"] === stationInfo.data[0]["Name"])
   }
-
   const handleSwipeLeft = () => {
-    console.log("left")
     if(index == station_list_length -1 )
     {
       index = 0
@@ -32,7 +30,6 @@ const StationScreen = () => {
       index += 1
     }
     handleItemClick(station_list[index])
-    console.log(station_list[index]["Name"])
   };
 
   const handleSwipeRight = () => {

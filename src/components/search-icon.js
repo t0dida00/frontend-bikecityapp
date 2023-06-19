@@ -13,7 +13,7 @@ const SearchIcon = ({setIsSearch,isSearch}) => {
       }
     return (
       <TouchableOpacity >
-        {isSearch ? <Icon name="close-outline" size={30} onPress={handleClose}/>: <Icon name="search-outline" size={30} onPress={handleBackPress} />}
+        {isSearch ? <Icon name="close-outline" size={30} onPress={handleClose} />: <Icon name="search-outline" size={30} onPress={handleBackPress}  />}
       </TouchableOpacity>
     );
   };
